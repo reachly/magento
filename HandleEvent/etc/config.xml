@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Reachly_HandleEvent>
+            <version>0.0.1</version>
+        </Reachly_HandleEvent>
+    </modules>
+
+    <global>
+        <models>
+            <reachly_handleevent>
+                <class>Reachly_HandleEvent_Model</class>
+            </reachly_handleevent>
+        </models>
+    </global>
+
+    <frontend>
+      <events>
+          <controller_action_layout_render_before>
+              <observers>
+                  <reachly_handleevent>
+                      <class>reachly_handleevent/observer</class>
+                      <method>processLoadEvent</method>
+                      <type>singleton</type>
+                  </reachly_handleevent>
+              </observers>
+          </controller_action_layout_render_before>
+          <controller_action_predispatch>
+              <observers>
+                  <reachly_handleevent>
+                      <class>reachly_handleevent/observer</class>
+                      <method>setUserData</method>
+                      <type>singleton</type>
+                  </reachly_handleevent>
+              </observers>
+          </controller_action_predispatch>
+      </events>
+    </frontend>
+</config>
