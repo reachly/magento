@@ -23,7 +23,7 @@ class Reachly_HandleEvent_Model_Observer
       $sArr = json_decode($json);
       $sArr[1] = $sArr[1] + 1;
       $jsonNew = json_encode($sArr);
-      $cookie->set('_rlys', $jsonNew, time()+60*60*24*365*2, '/');
+      $cookie->set('_rlys', $jsonNew, time()+30*60, '/');
     }
 
     public function setUserData($observer) {
