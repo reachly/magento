@@ -16,24 +16,50 @@
 
     <frontend>
       <events>
-          <controller_action_layout_render_before>
+          <!-- items updated -->
+          <checkout_cart_update_items_after>
               <observers>
                   <reachly_handleevent>
                       <class>reachly_handleevent/observer</class>
-                      <method>processLoadEvent</method>
+                      <method>processCartEvent</method>
                       <type>singleton</type>
                   </reachly_handleevent>
               </observers>
-          </controller_action_layout_render_before>
+          </checkout_cart_update_items_after>
+
+          <!-- item added to cart -->
+          <checkout_cart_add_product_complete>
+              <observers>
+                  <reachly_handleevent>
+                      <class>reachly_handleevent/observer</class>
+                      <method>processCartEvent</method>
+                      <type>singleton</type>
+                  </reachly_handleevent>
+              </observers>
+          </checkout_cart_add_product_complete>
+
+          <!-- item deleted from cart -->
+          <sales_quote_remove_item>
+              <observers>
+                  <reachly_handleevent>
+                      <class>reachly_handleevent/observer</class>
+                      <method>processCartEvent</method>
+                      <type>singleton</type>
+                  </reachly_handleevent>
+              </observers>
+          </sales_quote_remove_item>
+
+          <!-- page is being loaded -->
           <controller_action_predispatch>
               <observers>
                   <reachly_handleevent>
                       <class>reachly_handleevent/observer</class>
-                      <method>setUserData</method>
+                      <method>setCartToken</method>
                       <type>singleton</type>
                   </reachly_handleevent>
               </observers>
           </controller_action_predispatch>
+
       </events>
     </frontend>
 </config>

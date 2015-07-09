@@ -1,57 +1,61 @@
 <?php
 class Reachly_HandleEvent_Model_Observer
 {
-    protected function getUserID()
+    public function setCartToken($observer)
     {
-      $cookie = Mage::getSingleton('core/cookie');
-      return $cookie->get('_rly');
+        $cookie = Mage::getSingleton('core/cookie');
+        if (!isset($_COOKIE['cart'])) {
+            $token = substr(md5(rand()), 0, 32);
+            $cookie->set('cart', $token, time() + 60 * 60 * 24 * 365 * 2, '/');
+        }
     }
 
-    protected function getSessionData()
+    protected function getCartToken()
     {
-      $cookie = Mage::getSingleton('core/cookie');
-      $json = $cookie->get('_rlys');
-      $json = stripslashes($json);
-      return json_decode($json, true);
+        $cookie = Mage::getSingleton('core/cookie');
+        return $cookie->get('cart');
     }
 
-    protected function increasePageCount()
+    public function processCartEvent($observer)
     {
-      $cookie = Mage::getSingleton('core/cookie');
-      $json = $cookie->get('_rlys');
-      $json = stripslashes($json);
-      $sArr = json_decode($json);
-      $sArr[1] = $sArr[1] + 1;
-      $jsonNew = json_encode($sArr);
-      $cookie->set('_rlys', $jsonNew, time()+30*60, '/');
-    }
+        $cartArr = array();
+        $items   = array();
 
-    public function setUserData($observer) {
-      $cookie = Mage::getSingleton('core/cookie');
-      if(!isset($_COOKIE['_rly'])) {
-        $uid = dechex(mt_rand(1, 16777216))."-".dechex(mt_rand(1, 16777216))."-".dechex(time())."-".dechex(mt_rand(1, 16777216));
-        $cookie->set('_rly', $uid, time()+60*60*24*365*2, '/');
-      }
-      if(!isset($_COOKIE['_rlys'])) {
-        $sid = dechex(mt_rand(1, 16777216));
-        $sArr = array($sid, 1);
-        $json = json_encode($sArr);
-        $cookie->set('_rlys', $json, time()+30*60, '/');
-      }
-    }
+        $cart     = Mage::getModel('checkout/cart')->getQuote();
+        $allItems = $cart->getAllItems();
 
-    public function processLoadEvent($observer)
-    {
-        $this->increasePageCount();
-        $sessionData = $this->getSessionData();
+        $totaPrice  = 0;
+        $totaWeight = 0;
 
-        $timestamp = round(microtime(1) * 1000);
-        $url = Mage::helper('core/url')->getCurrentUrl();
-        $identity = $this->getUserID();
-        $sessionID = $sessionData[0];
-        $pageCount = $sessionData[1];
-        $referer = Mage::helper('core/http')->getHttpReferer();
+        foreach ($allItems as $productItem) {
+            $qty = $productItem->getQty();
+            while ($qty > 0) {
+                $product            = $productItem->getProduct();
+                $item               = array();
+                $itemPrice          = $product->getPrice();
+                $totaPrice          = $totaPrice + $itemPrice;
+                $item["price"]      = $itemPrice;
+                $item["product_id"] = $product->getId();
+                $item["title"]      = $product->getName();
 
-        Mage::log("\n=============\n"."timestamp: ".$timestamp."\n"."url: ".$url."\n"."referer: ".$referer."\n"."identity: ".$identity."\n"."sessionID: ".$sessionID."\n"."pageCount: ".$pageCount);
+                $totaWeight = $totaWeight + $product->getWeight();
+
+                array_push($items, $item);
+
+                $qty--;
+            }
+        }
+
+        $cartArr["items"]             = $items;
+        $cartArr["token"]             = $this->getCartToken();
+        $cartArr["total_price"]       = $totaPrice;
+        $cartArr["total_weight"]      = $totaWeight;
+        $cartArr["item_count"]        = sizeof($allItems);
+        $cartArr["requires_shipping"] = false;
+
+        $json = json_encode($cartArr);
+
+        $cartFile = fopen(Mage::getBaseDir()."/cart.json", "w");
+        fwrite($cartFile, $json);
     }
 }
