@@ -32,8 +32,6 @@ class Reachly_HandleEvent_Model_Observer
 
     public function processCheckoutEvent($observer)
     {
-        //Mage::log($this->getCartToken()."/".$this->getCheckoutToken());
-
         $whArr = array();
         $dataArr = array();
         $items   = array();
@@ -86,7 +84,6 @@ class Reachly_HandleEvent_Model_Observer
 
         $auth = $appID.":".base64_encode(hash_hmac('sha256', $json, $secretKey));
 
-
         $url = 'http://127.0.0.1:8042/checkout/';
         $ch = curl_init($url);
 
@@ -102,12 +99,7 @@ class Reachly_HandleEvent_Model_Observer
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json', 'Content-Length: '.strlen($json), 'Authorization: '.$auth));
 
-        $json_response = curl_exec($ch);
-        //$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        /*if ( $status != 201 ) {
-          Mage::log("Error: call to URL failed with status $status, response $json_response, curl_error " . curl_error($ch) . ", curl_errno " . curl_errno($ch));
-        }*/
+        curl_exec($ch);
 
         curl_close($ch);
     }
