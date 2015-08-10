@@ -49,6 +49,17 @@
               </observers>
           </sales_quote_remove_item>
 
+          <!-- checkout created -->
+          <controller_action_predispatch_checkout_onepage_index>
+              <observers>
+                  <reachly_handleevent>
+                      <class>reachly_handleevent/observer</class>
+                      <method>processCheckoutEvent</method>
+                      <type>singleton</type>
+                  </reachly_handleevent>
+              </observers>
+          </controller_action_predispatch_checkout_onepage_index>
+
           <!-- page is being loaded -->
           <controller_action_predispatch>
               <observers>
@@ -59,7 +70,6 @@
                   </reachly_handleevent>
               </observers>
           </controller_action_predispatch>
-
       </events>
     </frontend>
 </config>
