@@ -76,6 +76,7 @@ class Reachly_HandleEvent_Model_Observer
         $formattedTime = $dt->format('Y-m-d').'T'.$dt->format('H:i:s').$this->timezone_offset_string(date_default_timezone_get());
         $whArr["created_at"] = $formattedTime;
         $whArr["updated_at"] = $formattedTime;
+        $whArr["add_id"] = parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
 
         $json = json_encode($whArr);
 
