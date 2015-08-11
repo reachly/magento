@@ -78,13 +78,9 @@ class Reachly_HandleEvent_Model_Observer
         curl_close($ch);
     }
 
-    public function processCheckoutEvent($observer)
+    protected function getItems()
     {
-        $checkoutArr = $this->setCheckoutToken();
-
-        $whArr   = array();
-        $dataArr = array();
-        $items   = array();
+        $items = array();
 
         $cart     = Mage::getModel('checkout/cart')->getQuote();
         $allItems = $cart->getAllItems();
@@ -98,12 +94,15 @@ class Reachly_HandleEvent_Model_Observer
                 $product            = $productItem->getProduct();
                 $item               = array();
                 $itemPrice          = $product->getPrice();
+                $itemWeight         = $product->getWeight();
                 $totaPrice          = $totaPrice + $itemPrice;
                 $item["price"]      = $itemPrice;
+                $item["weight"]     = $itemWeight;
                 $item["product_id"] = $product->getId();
                 $item["title"]      = $product->getName();
 
-                $totaWeight = $totaWeight + $product->getWeight();
+
+                $totaWeight = $totaWeight + $itemWeight;
 
                 array_push($items, $item);
 
@@ -111,12 +110,28 @@ class Reachly_HandleEvent_Model_Observer
             }
         }
 
-        $dataArr["line_items"]   = $items;
+        return array(
+            $items,
+            $totaPrice,
+            $totaWeight
+        );
+    }
+
+    public function processCheckoutEvent($observer)
+    {
+        $checkoutArr = $this->setCheckoutToken();
+
+        $whArr   = array();
+        $dataArr = array();
+
+        $itemsData = $this->getItems();
+
+        $dataArr["line_items"]   = $itemsData[0];
         $dataArr["cart_token"]   = $this->getCartToken();
         $dataArr["token"]        = $checkoutArr[1];
-        $dataArr["total_price"]  = $totaPrice;
-        $dataArr["total_weight"] = $totaWeight;
-        $dataArr["item_count"]   = sizeof($allItems);
+        $dataArr["total_price"]  = $itemsData[1];
+        $dataArr["total_weight"] = $itemsData[2];
+        $dataArr["item_count"]   = sizeof($itemsData[0]);
         $dataArr["currency"]     = Mage::app()->getStore()->getCurrentCurrencyCode();
 
         $whArr["data"] = $dataArr;
@@ -135,4 +150,5 @@ class Reachly_HandleEvent_Model_Observer
 
         $this->postData($json, 'checkout');
     }
+
 }
