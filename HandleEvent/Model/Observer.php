@@ -39,7 +39,7 @@ class Reachly_HandleEvent_Model_Observer
 
         $auth = $appID . ":" . base64_encode(hash_hmac('sha256', $json, $secretKey));
 
-        $url = $apiURL.'/'.$endpoint;
+        $url = $apiURL . '/' . $endpoint;
         $ch  = curl_init($url);
 
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -108,7 +108,7 @@ class Reachly_HandleEvent_Model_Observer
         $formattedTime       = $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $this->timezoneOffsetString(date_default_timezone_get());
         $whArr["created_at"] = $formattedTime;
         $whArr["updated_at"] = $formattedTime;
-        $whArr["app_id"]     = "magento.".parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
+        $whArr["app_id"]     = "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
 
         $json = json_encode($whArr);
 

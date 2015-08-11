@@ -1,103 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <modules>
-        <Reachly_HandleEvent>
-            <version>0.0.1</version>
-        </Reachly_HandleEvent>
-    </modules>
-
-    <global>
-        <models>
-            <reachly_handleevent>
-                <class>Reachly_HandleEvent_Model</class>
-            </reachly_handleevent>
-        </models>
-        <helpers>
-            <reachly_handleevent>
-                <class>Reachly_HandleEvent_Helper</class>
-            </reachly_handleevent>
-        </helpers>
-    </global>
-
-    <frontend>
+   <modules>
+      <Reachly_HandleEvent>
+         <version>0.0.1</version>
+      </Reachly_HandleEvent>
+   </modules>
+   <global>
+      <models>
+         <reachly_handleevent>
+            <class>Reachly_HandleEvent_Model</class>
+         </reachly_handleevent>
+      </models>
+      <helpers>
+         <reachly_handleevent>
+            <class>Reachly_HandleEvent_Helper</class>
+         </reachly_handleevent>
+      </helpers>
+   </global>
+   <frontend>
       <events>
-          <!-- items updated -->
-          <checkout_cart_update_items_after>
-              <observers>
-                  <reachly_handleevent>
-                      <class>reachly_handleevent/observer</class>
-                      <method>processCartEvent</method>
-                      <type>singleton</type>
-                  </reachly_handleevent>
-              </observers>
-          </checkout_cart_update_items_after>
-
-          <!-- item added to cart -->
-          <checkout_cart_add_product_complete>
-              <observers>
-                  <reachly_handleevent>
-                      <class>reachly_handleevent/observer</class>
-                      <method>processCartEvent</method>
-                      <type>singleton</type>
-                  </reachly_handleevent>
-              </observers>
-          </checkout_cart_add_product_complete>
-
-          <!-- item deleted from cart -->
-          <sales_quote_remove_item>
-              <observers>
-                  <reachly_handleevent>
-                      <class>reachly_handleevent/observer</class>
-                      <method>processCartEvent</method>
-                      <type>singleton</type>
-                  </reachly_handleevent>
-              </observers>
-          </sales_quote_remove_item>
-
-          <!-- checkout created -->
-          <controller_action_predispatch_checkout_onepage_index>
-              <observers>
-                  <reachly_handleevent>
-                      <class>reachly_handleevent/observer</class>
-                      <method>processCheckoutEvent</method>
-                      <type>singleton</type>
-                  </reachly_handleevent>
-              </observers>
-          </controller_action_predispatch_checkout_onepage_index>
-
-          <!-- page is being loaded -->
-          <controller_action_predispatch>
-              <observers>
-                  <reachly_handleevent>
-                      <class>reachly_handleevent/observer</class>
-                      <method>setCartToken</method>
-                      <type>singleton</type>
-                  </reachly_handleevent>
-              </observers>
-          </controller_action_predispatch>
+         <!-- items updated -->
+         <checkout_cart_update_items_after>
+            <observers>
+               <reachly_handleevent>
+                  <class>reachly_handleevent/observer</class>
+                  <method>processCartEvent</method>
+                  <type>singleton</type>
+               </reachly_handleevent>
+            </observers>
+         </checkout_cart_update_items_after>
+         <!-- item added to cart -->
+         <checkout_cart_add_product_complete>
+            <observers>
+               <reachly_handleevent>
+                  <class>reachly_handleevent/observer</class>
+                  <method>processCartEvent</method>
+                  <type>singleton</type>
+               </reachly_handleevent>
+            </observers>
+         </checkout_cart_add_product_complete>
+         <!-- item deleted from cart -->
+         <sales_quote_remove_item>
+            <observers>
+               <reachly_handleevent>
+                  <class>reachly_handleevent/observer</class>
+                  <method>processCartEvent</method>
+                  <type>singleton</type>
+               </reachly_handleevent>
+            </observers>
+         </sales_quote_remove_item>
+         <!-- checkout created -->
+         <controller_action_predispatch_checkout_onepage_index>
+            <observers>
+               <reachly_handleevent>
+                  <class>reachly_handleevent/observer</class>
+                  <method>processCheckoutEvent</method>
+                  <type>singleton</type>
+               </reachly_handleevent>
+            </observers>
+         </controller_action_predispatch_checkout_onepage_index>
+         <!-- page is being loaded -->
+         <controller_action_predispatch>
+            <observers>
+               <reachly_handleevent>
+                  <class>reachly_handleevent/observer</class>
+                  <method>setCartToken</method>
+                  <type>singleton</type>
+               </reachly_handleevent>
+            </observers>
+         </controller_action_predispatch>
       </events>
-    </frontend>
-
-    <adminhtml>
-    <acl>
-        <resources>
+   </frontend>
+   <adminhtml>
+      <acl>
+         <resources>
             <admin>
-                <children>
-                    <system>
-                        <children>
-                            <config>
-                                <children>
-                                    <reachly_handleevent_options>
-                                        <title>Reachly Configuration Section</title>
-                                    </reachly_handleevent_options>
-                                </children>
-                            </config>
-                        </children>
-                    </system>
-                </children>
+               <children>
+                  <system>
+                     <children>
+                        <config>
+                           <children>
+                              <reachly_handleevent_options>
+                                 <title>Reachly Configuration Section</title>
+                              </reachly_handleevent_options>
+                           </children>
+                        </config>
+                     </children>
+                  </system>
+               </children>
             </admin>
-        </resources>
-    </acl>
-</adminhtml>
-
+         </resources>
+      </acl>
+   </adminhtml>
 </config>

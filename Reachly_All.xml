@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <modules>
-        <Reachly_HandleEvent>
-            <active>true</active>
-            <codePool>local</codePool>
-        </Reachly_HandleEvent>
-    </modules>
+   <modules>
+      <Reachly_HandleEvent>
+         <active>true</active>
+         <codePool>local</codePool>
+      </Reachly_HandleEvent>
+   </modules>
 </config>
