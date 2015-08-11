@@ -1,18 +1,6 @@
 <?php
 class Reachly_HandleEvent_Model_Observer
 {
-    public function setCartToken($observer)
-    {
-        $cookie = Mage::getSingleton('core/cookie');
-        if (!isset($_COOKIE['cart'])) {
-            $cartToken     = substr(md5(rand()), 0, 32);
-            $checkoutToken = substr(md5(rand()), 0, 32);
-
-            $cookie->set('cart', $cartToken, time() + 60 * 60 * 24 * 365 * 2, '/');
-            $cookie->set('checkout', $checkoutToken, time() + 60 * 60 * 24 * 365 * 2, '/');
-        }
-    }
-
     protected function getCartToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
@@ -23,6 +11,34 @@ class Reachly_HandleEvent_Model_Observer
     {
         $cookie = Mage::getSingleton('core/cookie');
         return $cookie->get('checkout');
+    }
+
+    public function setCartToken()
+    {
+        $cookie = Mage::getSingleton('core/cookie');
+        if (!isset($_COOKIE['cart'])) {
+            $cartToken = substr(md5(rand()), 0, 32);
+            $cookie->set('cart', $cartToken, time() + 60 * 60 * 24 * 365 * 2, '/');
+        }
+    }
+
+    public function setCheckoutToken()
+    {
+        $cookie = Mage::getSingleton('core/cookie');
+        if (!isset($_COOKIE['checkout'])) {
+            $checkoutToken = substr(md5(rand()), 0, 32);
+            $cookie->set('checkout', $checkoutToken, time() + 60 * 60 * 24 * 365 * 2, '/');
+            $respArr = array(
+                true,
+                $checkoutToken
+            );
+        } else {
+            $respArr = array(
+                false,
+                $this->getCheckoutToken()
+            );
+        }
+        return $respArr;
     }
 
     protected function timezoneOffsetString($offset)
@@ -64,6 +80,8 @@ class Reachly_HandleEvent_Model_Observer
 
     public function processCheckoutEvent($observer)
     {
+        $checkoutArr = $this->setCheckoutToken();
+
         $whArr   = array();
         $dataArr = array();
         $items   = array();
@@ -95,19 +113,22 @@ class Reachly_HandleEvent_Model_Observer
 
         $dataArr["line_items"]   = $items;
         $dataArr["cart_token"]   = $this->getCartToken();
-        $dataArr["token"]        = $this->getCheckoutToken();
+        $dataArr["token"]        = $checkoutArr[1];
         $dataArr["total_price"]  = $totaPrice;
         $dataArr["total_weight"] = $totaWeight;
         $dataArr["item_count"]   = sizeof($allItems);
         $dataArr["currency"]     = Mage::app()->getStore()->getCurrentCurrencyCode();
 
-        $whArr["data"]  = $dataArr;
-        $whArr["topic"] = "checkouts/create";
+        $whArr["data"] = $dataArr;
+
+        if ($checkoutArr[0]) {
+            $whArr["topic"] = "checkouts/create";
+        } else {
+            $whArr["topic"] = "checkouts/update";
+        }
 
         $dt                  = new DateTime();
-        $formattedTime       = $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $this->timezoneOffsetString(date_default_timezone_get());
-        $whArr["created_at"] = $formattedTime;
-        $whArr["updated_at"] = $formattedTime;
+        $whArr["updated_at"] = $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $this->timezoneOffsetString(date_default_timezone_get());
         $whArr["app_id"]     = "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
 
         $json = json_encode($whArr);
