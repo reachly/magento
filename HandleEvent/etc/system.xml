@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <reachly_handleevent translate="label" module="reachly_handleevent">
+            <label>Reachly Extension Configuration</label>
+            <sort_order>1</sort_order>
+        </reachly_handleevent>
+    </tabs>
+
+    <sections>
+        <reachly_handleevent_options translate="label" module="reachly_handleevent">
+            <label>Configuration Settings</label>
+            <tab>reachly_handleevent</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <section_one translate="label">
+                    <label>API Access</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <field_app_id>
+                            <label>App ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enter provided App ID in hex string format</comment>
+                        </field_app_id>
+                        <field_secret_key>
+                            <label>Secret Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enter provided Secret Key in hex string format</comment>
+                        </field_secret_key>
+                    </fields>
+                </section_one>
+            </groups>
+        </reachly_handleevent_options>
+    </sections>
+</config>

@@ -34,8 +34,8 @@ class Reachly_HandleEvent_Model_Observer
     {
         $apiURL = 'http://127.0.0.1:8042';
 
-        $appID     = "7a47d23ed6ae5fa5bd8697678d3f8b32632f8916";
-        $secretKey = "8e80f1a5b494b5150cb513fd332ba752cc6c481ae34ddcb3cf08e0b2dea256ba";
+        $appID     = Mage::getStoreConfig('reachly_handleevent_options/section_one/field_app_id');
+        $secretKey = Mage::getStoreConfig('reachly_handleevent_options/section_one/field_secret_key');
 
         $auth = $appID . ":" . base64_encode(hash_hmac('sha256', $json, $secretKey));
 

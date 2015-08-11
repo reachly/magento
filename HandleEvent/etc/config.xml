@@ -12,6 +12,11 @@
                 <class>Reachly_HandleEvent_Model</class>
             </reachly_handleevent>
         </models>
+        <helpers>
+            <reachly_handleevent>
+                <class>Reachly_HandleEvent_Helper</class>
+            </reachly_handleevent>
+        </helpers>
     </global>
 
     <frontend>
@@ -72,4 +77,27 @@
           </controller_action_predispatch>
       </events>
     </frontend>
+
+    <adminhtml>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <reachly_handleevent_options>
+                                        <title>Reachly Configuration Section</title>
+                                    </reachly_handleevent_options>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</adminhtml>
+
 </config>
