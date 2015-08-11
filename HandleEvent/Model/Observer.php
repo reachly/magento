@@ -84,7 +84,7 @@ class Reachly_HandleEvent_Model_Observer
                 $item["title"]      = $product->getName();
 
                 $totaWeight = $totaWeight + $product->getWeight();
-                
+
                 array_push($items, $item);
 
                 $qty--;
@@ -106,7 +106,7 @@ class Reachly_HandleEvent_Model_Observer
         $formattedTime       = $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $this->timezoneOffsetString(date_default_timezone_get());
         $whArr["created_at"] = $formattedTime;
         $whArr["updated_at"] = $formattedTime;
-        $whArr["add_id"]     = parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
+        $whArr["app_id"]     = "magento.".parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
 
         $json = json_encode($whArr);
 
