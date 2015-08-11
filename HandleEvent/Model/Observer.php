@@ -30,14 +30,14 @@ class Reachly_HandleEvent_Model_Observer
         return sprintf("%s%02d:%02d", ($offset >= 0) ? '+' : '-', abs($offset / 3600), abs($offset % 3600) / 60);
     }
 
-    protected function postData($json)
+    protected function postData($json, $endpoint)
     {
         $appID     = "7a47d23ed6ae5fa5bd8697678d3f8b32632f8916";
         $secretKey = "8e80f1a5b494b5150cb513fd332ba752cc6c481ae34ddcb3cf08e0b2dea256ba";
 
         $auth = $appID . ":" . base64_encode(hash_hmac('sha256', $json, $secretKey));
 
-        $url = 'http://127.0.0.1:8042/checkout/';
+        $url = 'http://127.0.0.1:8042/'.$endpoint;
         $ch  = curl_init($url);
 
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -110,6 +110,6 @@ class Reachly_HandleEvent_Model_Observer
 
         $json = json_encode($whArr);
 
-        $this->postData($json);
+        $this->postData($json, 'checkout');
     }
 }
