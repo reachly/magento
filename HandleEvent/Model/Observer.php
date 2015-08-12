@@ -1,42 +1,12 @@
 <?php
 class Reachly_HandleEvent_Model_Observer
 {
-    protected function getCartToken()
-    {
-        $cookie = Mage::getSingleton('core/cookie');
-        return $cookie->get('cart');
-    }
-
-    protected function getCheckoutToken()
-    {
-        $cookie = Mage::getSingleton('core/cookie');
-        return $cookie->get('checkout');
-    }
-
-    protected function getOrderToken()
-    {
-        $cookie = Mage::getSingleton('core/cookie');
-        return $cookie->get('order');
-    }
-
-    protected function deleteCheckoutToken()
-    {
-        $cookie = Mage::getSingleton('core/cookie');
-        $cookie->set('checkout', '', -300, '/');
-    }
-
-    protected function deleteOrderToken()
-    {
-        $cookie = Mage::getSingleton('core/cookie');
-        $cookie->set('order', '', -300, '/');
-    }
-
     public function setCartToken()
     {
         $orderSet = isset($_COOKIE['order']);
         if ($orderSet) {
-            $this->deleteCheckoutToken();
-            $this->deleteOrderToken();
+            Mage::helper('reachly_handleevent')->deleteCheckoutToken();
+            Mage::helper('reachly_handleevent')->deleteOrderToken();
         }
 
         if (!isset($_COOKIE['cart']) || $orderSet) {
@@ -59,7 +29,7 @@ class Reachly_HandleEvent_Model_Observer
         } else {
             $respArr = array(
                 false,
-                $this->getCheckoutToken()
+                Mage::helper('reachly_handleevent')->getCheckoutToken()
             );
         }
         return $respArr;
@@ -73,7 +43,7 @@ class Reachly_HandleEvent_Model_Observer
             $cookie->set('order', $orderToken, 60 * 60 * 24 * 365 * 2, '/');
             $resp = $orderToken;
         } else {
-            $resp = $this->getOrderToken();
+            $resp = Mage::helper('reachly_handleevent')->getOrderToken();
         }
         return $resp;
     }
@@ -193,7 +163,7 @@ class Reachly_HandleEvent_Model_Observer
         $whArr["updated_at"] = $this->getTimestamp();
         $whArr["app_id"]     = $this->getStoreAppID();
 
-        $dataArr["cart_token"] = $this->getCartToken();
+        $dataArr["cart_token"] = Mage::helper('reachly_handleevent')->getCartToken();
         $dataArr["token"]      = $checkoutArr[1];
 
         $dataArr = array_merge($dataArr, $this->getCartData());
@@ -216,8 +186,8 @@ class Reachly_HandleEvent_Model_Observer
         $whArr["updated_at"] = $this->getTimestamp();
         $whArr["app_id"]     = $this->getStoreAppID();
 
-        $dataArr["cart_token"]     = $this->getCartToken();
-        $dataArr["checkout_token"] = $this->getCheckoutToken();
+        $dataArr["cart_token"]     = Mage::helper('reachly_handleevent')->getCartToken();
+        $dataArr["checkout_token"] = Mage::helper('reachly_handleevent')->getCheckoutToken();
         $dataArr["token"]          = $orderToken;
 
         $dataArr = array_merge($dataArr, $this->getCartData());
