@@ -172,7 +172,6 @@ class Reachly_HandleEvent_Model_Observer
         } else {
             $whArr["topic"] = "checkouts/update";
         }
-
         $whArr["updated_at"] = $this->getTimestamp();
         $whArr["app_id"]     = $this->getStoreAppID();
 
@@ -194,6 +193,7 @@ class Reachly_HandleEvent_Model_Observer
 
         $whArr               = array();
         $dataArr             = array();
+
         $whArr["topic"]      = "orders/create";
         $whArr["updated_at"] = $this->getTimestamp();
         $whArr["app_id"]     = $this->getStoreAppID();
