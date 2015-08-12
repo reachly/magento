@@ -48,11 +48,6 @@ class Reachly_HandleEvent_Model_Observer
         return $resp;
     }
 
-    protected function timezoneOffsetString($offset)
-    {
-        return sprintf("%s%02d:%02d", ($offset >= 0) ? '+' : '-', abs($offset / 3600), abs($offset % 3600) / 60);
-    }
-
     protected function postData($json, $endpoint)
     {
         $apiURL = 'http://127.0.0.1:8042';
@@ -137,17 +132,6 @@ class Reachly_HandleEvent_Model_Observer
         return $dataArr;
     }
 
-    protected function getTimestamp()
-    {
-        $dt = new DateTime();
-        return $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $this->timezoneOffsetString(date_default_timezone_get());
-    }
-
-    protected function getStoreAppID()
-    {
-        return "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
-    }
-
     public function processCheckoutEvent()
     {
         $checkoutArr = $this->setCheckoutToken();
@@ -160,8 +144,8 @@ class Reachly_HandleEvent_Model_Observer
         } else {
             $whArr["topic"] = "checkouts/update";
         }
-        $whArr["updated_at"] = $this->getTimestamp();
-        $whArr["app_id"]     = $this->getStoreAppID();
+        $whArr["updated_at"] = Mage::helper('reachly_handleevent')->getTimestamp();
+        $whArr["app_id"]     = Mage::helper('reachly_handleevent')->getStoreAppID();
 
         $dataArr["cart_token"] = Mage::helper('reachly_handleevent')->getCartToken();
         $dataArr["token"]      = $checkoutArr[1];
@@ -183,8 +167,8 @@ class Reachly_HandleEvent_Model_Observer
         $dataArr = array();
 
         $whArr["topic"]      = "orders/create";
-        $whArr["updated_at"] = $this->getTimestamp();
-        $whArr["app_id"]     = $this->getStoreAppID();
+        $whArr["updated_at"] = Mage::helper('reachly_handleevent')->getTimestamp();
+        $whArr["app_id"]     = Mage::helper('reachly_handleevent')->getStoreAppID();
 
         $dataArr["cart_token"]     = Mage::helper('reachly_handleevent')->getCartToken();
         $dataArr["checkout_token"] = Mage::helper('reachly_handleevent')->getCheckoutToken();
