@@ -135,6 +135,20 @@ class Reachly_HandleEvent_Model_Observer
         );
     }
 
+    protected function getCartData()
+    {
+        $dataArr = array();
+
+        $itemsData               = $this->getItems();
+        $dataArr["line_items"]   = $itemsData[0];
+        $dataArr["total_price"]  = $itemsData[1];
+        $dataArr["total_weight"] = $itemsData[2];
+        $dataArr["item_count"]   = sizeof($itemsData[0]);
+        $dataArr["currency"]     = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+        return $dataArr;
+    }
+
     protected function getTimestamp()
     {
         $dt = new DateTime();
@@ -165,12 +179,7 @@ class Reachly_HandleEvent_Model_Observer
         $dataArr["cart_token"] = $this->getCartToken();
         $dataArr["token"]      = $checkoutArr[1];
 
-        $itemsData               = $this->getItems();
-        $dataArr["line_items"]   = $itemsData[0];
-        $dataArr["total_price"]  = $itemsData[1];
-        $dataArr["total_weight"] = $itemsData[2];
-        $dataArr["item_count"]   = sizeof($itemsData[0]);
-        $dataArr["currency"]     = Mage::app()->getStore()->getCurrentCurrencyCode();
+        $dataArr = array_merge($dataArr, $this->getCartData());
 
         $whArr["data"] = $dataArr;
 
@@ -193,12 +202,7 @@ class Reachly_HandleEvent_Model_Observer
         $dataArr["checkout_token"] = $this->getCheckoutToken();
         $dataArr["token"]          = $orderToken;
 
-        $itemsData               = $this->getItems();
-        $dataArr["line_items"]   = $itemsData[0];
-        $dataArr["total_price"]  = $itemsData[1];
-        $dataArr["total_weight"] = $itemsData[2];
-        $dataArr["item_count"]   = sizeof($itemsData[0]);
-        $dataArr["currency"]     = Mage::app()->getStore()->getCurrentCurrencyCode();
+        $dataArr = array_merge($dataArr, $this->getCartData());
 
         $whArr["data"] = $dataArr;
 
