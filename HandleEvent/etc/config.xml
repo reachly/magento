@@ -73,17 +73,6 @@
                </reachly_handleevent>
             </observers>
          </checkout_submit_all_after>
-
-         <!-- page is being loaded -->
-         <!--<controller_action_predispatch>
-            <observers>
-               <reachly_handleevent>
-                  <class>reachly_handleevent/observer</class>
-                  <method>setCartToken</method>
-                  <type>singleton</type>
-               </reachly_handleevent>
-            </observers>
-         </controller_action_predispatch>-->
       </events>
    </frontend>
 

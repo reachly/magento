@@ -19,34 +19,39 @@ class Reachly_HandleEvent_Model_Observer
         return $cookie->get('order');
     }
 
-    public function setCartToken()
+    protected function deleteCheckoutToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
-        if (!isset($_COOKIE['cart'])) {
-            $cartToken = substr(md5(rand()), 0, 32);
-            $cookie->set('cart', $cartToken, time() + 60 * 60 * 24 * 365 * 2, '/');
-        }
+        $cookie->set('checkout', '', -300, '/');
     }
 
-    public function setOrderToken()
+    protected function deleteOrderToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
-        if (!isset($_COOKIE['order'])) {
-            $orderToken = substr(md5(rand()), 0, 32);
-            $cookie->set('order', $orderToken, time() + 60 * 60 * 24 * 365 * 2, '/');
-            $resp = $orderToken;
-        } else {
-            $resp = $this->getOrderToken();
+        $cookie->set('order', '', -300, '/');
+    }
+
+    public function setCartToken()
+    {
+        $orderSet = isset($_COOKIE['order']);
+        if ($orderSet) {
+            $this->deleteCheckoutToken();
+            $this->deleteOrderToken();
         }
-        return $resp;
+
+        if (!isset($_COOKIE['cart']) || $orderSet) {
+            $cookie    = Mage::getSingleton('core/cookie');
+            $cartToken = substr(md5(rand()), 0, 32);
+            $cookie->set('cart', $cartToken, 60 * 60 * 24 * 365 * 2, '/');
+        }
     }
 
     public function setCheckoutToken()
     {
-        $cookie = Mage::getSingleton('core/cookie');
         if (!isset($_COOKIE['checkout'])) {
+            $cookie        = Mage::getSingleton('core/cookie');
             $checkoutToken = substr(md5(rand()), 0, 32);
-            $cookie->set('checkout', $checkoutToken, time() + 60 * 60 * 24 * 365 * 2, '/');
+            $cookie->set('checkout', $checkoutToken, 60 * 60 * 24 * 365 * 2, '/');
             $respArr = array(
                 true,
                 $checkoutToken
@@ -58,6 +63,19 @@ class Reachly_HandleEvent_Model_Observer
             );
         }
         return $respArr;
+    }
+
+    public function setOrderToken()
+    {
+        if (!isset($_COOKIE['order'])) {
+            $cookie     = Mage::getSingleton('core/cookie');
+            $orderToken = substr(md5(rand()), 0, 32);
+            $cookie->set('order', $orderToken, 60 * 60 * 24 * 365 * 2, '/');
+            $resp = $orderToken;
+        } else {
+            $resp = $this->getOrderToken();
+        }
+        return $resp;
     }
 
     protected function timezoneOffsetString($offset)
@@ -160,7 +178,7 @@ class Reachly_HandleEvent_Model_Observer
         return "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
     }
 
-    public function processCheckoutEvent($observer)
+    public function processCheckoutEvent()
     {
         $checkoutArr = $this->setCheckoutToken();
 
@@ -187,12 +205,12 @@ class Reachly_HandleEvent_Model_Observer
         $this->postData($json, 'checkout');
     }
 
-    public function processOrderEvent($observer)
+    public function processOrderEvent()
     {
         $orderToken = $this->setOrderToken();
 
-        $whArr               = array();
-        $dataArr             = array();
+        $whArr   = array();
+        $dataArr = array();
 
         $whArr["topic"]      = "orders/create";
         $whArr["updated_at"] = $this->getTimestamp();
