@@ -46,7 +46,7 @@ class Reachly_HandleEvent_Model_Observer
         }
     }
 
-    public function setCheckoutToken()
+    protected function setCheckoutToken()
     {
         if (!isset($_COOKIE['checkout'])) {
             $cookie        = Mage::getSingleton('core/cookie');
@@ -65,7 +65,7 @@ class Reachly_HandleEvent_Model_Observer
         return $respArr;
     }
 
-    public function setOrderToken()
+    protected function setOrderToken()
     {
         if (!isset($_COOKIE['order'])) {
             $cookie     = Mage::getSingleton('core/cookie');
