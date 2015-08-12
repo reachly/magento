@@ -13,6 +13,12 @@ class Reachly_HandleEvent_Model_Observer
         return $cookie->get('checkout');
     }
 
+    protected function getOrderToken()
+    {
+        $cookie = Mage::getSingleton('core/cookie');
+        return $cookie->get('order');
+    }
+
     public function setCartToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
@@ -20,6 +26,19 @@ class Reachly_HandleEvent_Model_Observer
             $cartToken = substr(md5(rand()), 0, 32);
             $cookie->set('cart', $cartToken, time() + 60 * 60 * 24 * 365 * 2, '/');
         }
+    }
+
+    public function setOrderToken()
+    {
+        $cookie = Mage::getSingleton('core/cookie');
+        if (!isset($_COOKIE['order'])) {
+            $orderToken = substr(md5(rand()), 0, 32);
+            $cookie->set('order', $orderToken, time() + 60 * 60 * 24 * 365 * 2, '/');
+            $resp = $orderToken;
+        } else {
+            $resp = $this->getOrderToken();
+        }
+        return $resp;
     }
 
     public function setCheckoutToken()
@@ -101,7 +120,6 @@ class Reachly_HandleEvent_Model_Observer
                 $item["product_id"] = $product->getId();
                 $item["title"]      = $product->getName();
 
-
                 $totaWeight = $totaWeight + $itemWeight;
 
                 array_push($items, $item);
@@ -117,6 +135,17 @@ class Reachly_HandleEvent_Model_Observer
         );
     }
 
+    protected function getTimestamp()
+    {
+        $dt = new DateTime();
+        return $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $this->timezoneOffsetString(date_default_timezone_get());
+    }
+
+    protected function getStoreAppID()
+    {
+        return "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
+    }
+
     public function processCheckoutEvent($observer)
     {
         $checkoutArr = $this->setCheckoutToken();
@@ -124,11 +153,20 @@ class Reachly_HandleEvent_Model_Observer
         $whArr   = array();
         $dataArr = array();
 
-        $itemsData = $this->getItems();
+        if ($checkoutArr[0]) {
+            $whArr["topic"] = "checkouts/create";
+        } else {
+            $whArr["topic"] = "checkouts/update";
+        }
 
+        $whArr["updated_at"] = $this->getTimestamp();
+        $whArr["app_id"]     = $this->getStoreAppID();
+
+        $dataArr["cart_token"] = $this->getCartToken();
+        $dataArr["token"]      = $checkoutArr[1];
+
+        $itemsData               = $this->getItems();
         $dataArr["line_items"]   = $itemsData[0];
-        $dataArr["cart_token"]   = $this->getCartToken();
-        $dataArr["token"]        = $checkoutArr[1];
         $dataArr["total_price"]  = $itemsData[1];
         $dataArr["total_weight"] = $itemsData[2];
         $dataArr["item_count"]   = sizeof($itemsData[0]);
@@ -136,19 +174,36 @@ class Reachly_HandleEvent_Model_Observer
 
         $whArr["data"] = $dataArr;
 
-        if ($checkoutArr[0]) {
-            $whArr["topic"] = "checkouts/create";
-        } else {
-            $whArr["topic"] = "checkouts/update";
-        }
-
-        $dt                  = new DateTime();
-        $whArr["updated_at"] = $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $this->timezoneOffsetString(date_default_timezone_get());
-        $whArr["app_id"]     = "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
-
         $json = json_encode($whArr);
 
         $this->postData($json, 'checkout');
     }
 
+    public function processOrderEvent($observer)
+    {
+        $orderToken = $this->setOrderToken();
+
+        $whArr               = array();
+        $dataArr             = array();
+        $whArr["topic"]      = "orders/create";
+        $whArr["updated_at"] = $this->getTimestamp();
+        $whArr["app_id"]     = $this->getStoreAppID();
+
+        $dataArr["cart_token"]     = $this->getCartToken();
+        $dataArr["checkout_token"] = $this->getCheckoutToken();
+        $dataArr["token"]          = $orderToken;
+
+        $itemsData               = $this->getItems();
+        $dataArr["line_items"]   = $itemsData[0];
+        $dataArr["total_price"]  = $itemsData[1];
+        $dataArr["total_weight"] = $itemsData[2];
+        $dataArr["item_count"]   = sizeof($itemsData[0]);
+        $dataArr["currency"]     = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+        $whArr["data"] = $dataArr;
+
+        $json = json_encode($whArr);
+
+        $this->postData($json, 'order');
+    }
 }
