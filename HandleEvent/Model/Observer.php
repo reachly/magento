@@ -156,7 +156,7 @@ class Reachly_HandleEvent_Model_Observer
         $helper->postData($json, 'order');
     }
 
-    public function productEvent($observer)
+    public function productSaveEvent($observer)
     {
         $helper  = Mage::helper('reachly_handleevent');
         $product = $observer->getEvent()->getProduct();
@@ -200,5 +200,10 @@ class Reachly_HandleEvent_Model_Observer
         $json = json_encode($whArr);
 
         $helper->postData($json, 'product');
+    }
+
+    public function productDeleteEvent($observer)
+    {
+        //TODO: send products/delete
     }
 }

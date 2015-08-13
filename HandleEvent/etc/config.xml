@@ -5,6 +5,7 @@
          <version>0.0.1</version>
       </Reachly_HandleEvent>
    </modules>
+
    <global>
       <models>
          <reachly_handleevent>
@@ -17,6 +18,7 @@
          </reachly_handleevent>
       </helpers>
    </global>
+
    <frontend>
       <events>
          <!-- item added to cart -->
@@ -55,18 +57,29 @@
    </frontend>
 
    <adminhtml>
-     <events>
-        <!-- product saved -->
-        <catalog_product_prepare_save>
-           <observers>
-              <reachly_handleevent>
-                 <class>reachly_handleevent/observer</class>
-                 <method>productEvent</method>
-                 <type>singleton</type>
-              </reachly_handleevent>
-           </observers>
-        </catalog_product_prepare_save>
-     </events>
+      <events>
+         <!-- product saved -->
+         <catalog_product_prepare_save>
+            <observers>
+               <reachly_handleevent>
+                  <class>reachly_handleevent/observer</class>
+                  <method>productSaveEvent</method>
+                  <type>singleton</type>
+               </reachly_handleevent>
+            </observers>
+         </catalog_product_prepare_save>
+
+         <!-- product deleted -->
+         <catalog_controller_product_delete>
+            <observers>
+               <reachly_handleevent>
+                  <class>reachly_handleevent/observer</class>
+                  <method>productDeleteEvent</method>
+                  <type>singleton</type>
+               </reachly_handleevent>
+            </observers>
+         </catalog_controller_product_delete>
+      </events>
 
       <acl>
          <resources>
