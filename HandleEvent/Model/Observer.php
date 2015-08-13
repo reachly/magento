@@ -191,6 +191,8 @@ class Reachly_HandleEvent_Model_Observer
         $dataArr["created_at"] = $createdAt;
         $dataArr["updated_at"] = $updatedAt;
 
+        //TODO: add variants
+
         $whArr["data"] = $dataArr;
 
         $json = json_encode($whArr);
