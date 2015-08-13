@@ -173,6 +173,7 @@ class Reachly_HandleEvent_Model_Observer
             $createdAt      = $currentTime;
             $updatedAt      = $currentTime;
             $whArr["topic"] = "products/create";
+            $productID      = Mage::getModel('catalog/product')->getCollection()->getLastItem()->getId() + 1;
         } else {
             $t              = new DateTime('now', new DateTimeZone(Mage::getStoreConfig('general/locale/timezone')));
             $offset         = $t->format('P');
@@ -180,11 +181,12 @@ class Reachly_HandleEvent_Model_Observer
             $updatedAt      = $mageDate->date("Y-m-d", $updatedAt) . "T" . $mageDate->date("H:i:s", $updatedAt) . $offset;
             $createdAt      = $mageDate->date("Y-m-d", $createdAt) . "T" . $mageDate->date("H:i:s", $createdAt) . $offset;
             $whArr["topic"] = "products/update";
+            $productID      = $product->getId();
         }
         $whArr["updated_at"] = $currentTime;
         $whArr["app_id"]     = $helper->getStoreAppID();
 
-        $dataArr["id"]         = $product->getId();
+        $dataArr["id"]         = $productID;
         $productName           = $product->getName();
         $dataArr["title"]      = $productName;
         $dataArr["handle"]     = $helper->getHandle($productName);
