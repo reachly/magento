@@ -42,6 +42,15 @@
                      <show_in_store>1</show_in_store>
                      <comment>Enter provided Secret Key in hex string format</comment>
                   </field_secret_key>
+                  <field_endpoint>
+                     <label>Endpoint URL</label>
+                     <frontend_type>text</frontend_type>
+                     <sort_order>1</sort_order>
+                     <show_in_default>1</show_in_default>
+                     <show_in_website>1</show_in_website>
+                     <show_in_store>1</show_in_store>
+                     <comment>Enter provided Endpoint URL</comment>
+                  </field_endpoint>
                </fields>
             </section_one>
          </groups>

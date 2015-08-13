@@ -51,7 +51,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function postData($json, $endpoint)
     {
-        $apiURL = 'http://127.0.0.1:8042';
+        $apiURL = 'http://' . Mage::getStoreConfig('reachly_handleevent_options/section_one/field_endpoint');
 
         $appID     = Mage::getStoreConfig('reachly_handleevent_options/section_one/field_app_id');
         $secretKey = Mage::getStoreConfig('reachly_handleevent_options/section_one/field_secret_key');
