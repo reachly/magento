@@ -194,6 +194,6 @@ class Reachly_HandleEvent_Model_Observer
 
         $json = json_encode($whArr);
 
-        Mage::log($json);
+        $helper->postData($json, 'product');
     }
 }
