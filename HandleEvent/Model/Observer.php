@@ -158,20 +158,37 @@ class Reachly_HandleEvent_Model_Observer
 
     public function productEvent($observer)
     {
-        $helper = Mage::helper('reachly_handleevent');
+        $helper  = Mage::helper('reachly_handleevent');
+        $product = $observer->getEvent()->getProduct();
 
         $whArr   = array();
         $dataArr = array();
 
-        $whArr["topic"]      = "products/update";
-        $whArr["updated_at"] = $helper->getTimestamp();
+        $currentTime = $helper->getTimestamp();
+
+        $createdAt = $product->getCreatedAt();
+        $updatedAt = $product->getUpdatedAt();
+
+        if (empty($createdAt)) {
+            $createdAt      = $currentTime;
+            $updatedAt      = $currentTime;
+            $whArr["topic"] = "products/create";
+        } else {
+            $t      = new DateTime('now', new DateTimeZone(Mage::getStoreConfig('general/locale/timezone')));
+            $offset = $t->format('P');
+            $mageDate       = Mage::getModel('core/date');
+            $updatedAt      = $mageDate->date("Y-m-d", $updatedAt) . "T" . $mageDate->date("H:i:s", $updatedAt) . $offset;
+            $createdAt      = $mageDate->date("Y-m-d", $createdAt) . "T" . $mageDate->date("H:i:s", $createdAt) . $offset;
+            $whArr["topic"] = "products/update";
+        }
+        $whArr["updated_at"] = $currentTime;
         $whArr["app_id"]     = $helper->getStoreAppID();
 
-        $product = $observer->getEvent()->getProduct();
-
-        $productName       = $product->getName();
-        $dataArr["title"]  = $productName;
-        $dataArr["handle"] = $helper->getHandle($productName);
+        $productName           = $product->getName();
+        $dataArr["title"]      = $productName;
+        $dataArr["handle"]     = $helper->getHandle($productName);
+        $dataArr["created_at"] = $createdAt;
+        $dataArr["updated_at"] = $updatedAt;
 
         $whArr["data"] = $dataArr;
 
