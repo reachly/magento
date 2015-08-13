@@ -19,17 +19,6 @@
    </global>
    <frontend>
       <events>
-         <!-- items updated -->
-         <checkout_cart_update_items_after>
-            <observers>
-               <reachly_handleevent>
-                  <class>reachly_handleevent/observer</class>
-                  <method>setCartToken</method>
-                  <type>singleton</type>
-               </reachly_handleevent>
-            </observers>
-         </checkout_cart_update_items_after>
-
          <!-- item added to cart -->
          <checkout_cart_add_product_complete>
             <observers>
@@ -40,17 +29,6 @@
                </reachly_handleevent>
             </observers>
          </checkout_cart_add_product_complete>
-
-         <!-- item deleted from cart -->
-         <sales_quote_remove_item>
-            <observers>
-               <reachly_handleevent>
-                  <class>reachly_handleevent/observer</class>
-                  <method>setCartToken</method>
-                  <type>singleton</type>
-               </reachly_handleevent>
-            </observers>
-         </sales_quote_remove_item>
 
          <!-- checkout event -->
          <controller_action_predispatch_checkout_onepage_index>
@@ -77,6 +55,19 @@
    </frontend>
 
    <adminhtml>
+     <events>
+        <!-- product saved -->
+        <catalog_product_prepare_save>
+           <observers>
+              <reachly_handleevent>
+                 <class>reachly_handleevent/observer</class>
+                 <method>productEvent</method>
+                 <type>singleton</type>
+              </reachly_handleevent>
+           </observers>
+        </catalog_product_prepare_save>
+     </events>
+
       <acl>
          <resources>
             <admin>

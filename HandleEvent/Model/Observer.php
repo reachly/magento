@@ -155,4 +155,28 @@ class Reachly_HandleEvent_Model_Observer
 
         $helper->postData($json, 'order');
     }
+
+    public function productEvent($observer)
+    {
+        $helper = Mage::helper('reachly_handleevent');
+
+        $whArr   = array();
+        $dataArr = array();
+
+        $whArr["topic"]      = "products/update";
+        $whArr["updated_at"] = $helper->getTimestamp();
+        $whArr["app_id"]     = $helper->getStoreAppID();
+
+        $product = $observer->getEvent()->getProduct();
+
+        $productName       = $product->getName();
+        $dataArr["title"]  = $productName;
+        $dataArr["handle"] = $helper->getHandle($productName);
+
+        $whArr["data"] = $dataArr;
+
+        $json = json_encode($whArr);
+
+        Mage::log($json);
+    }
 }

@@ -44,6 +44,11 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
     }
 
+    public function getHandle($title)
+    {
+        return str_replace(' ', '.', strtolower($title));
+    }
+
     public function postData($json, $endpoint)
     {
         $apiURL = 'http://127.0.0.1:8042';
