@@ -119,6 +119,58 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $imagesArr;
     }
 
+    protected function getItems()
+    {
+        $items = array();
+
+        $cart     = Mage::getModel('checkout/cart')->getQuote();
+        $allItems = $cart->getAllItems();
+
+        $totaPrice  = 0;
+        $totaWeight = 0;
+
+        foreach ($allItems as $productItem) {
+            $qty = $productItem->getQty();
+            while ($qty > 0) {
+                $product            = $productItem->getProduct();
+                $item               = array();
+                $itemPrice          = $product->getPrice();
+                $itemWeight         = $product->getWeight();
+                $totaPrice          = $totaPrice + $itemPrice;
+                $item["price"]      = $itemPrice;
+                $item["weight"]     = $itemWeight;
+                $item["product_id"] = $product->getId();
+                $item["title"]      = $product->getName();
+
+                $totaWeight = $totaWeight + $itemWeight;
+
+                array_push($items, $item);
+
+                $qty--;
+            }
+        }
+
+        return array(
+            $items,
+            $totaPrice,
+            $totaWeight
+        );
+    }
+
+    public function getCartData()
+    {
+        $dataArr = array();
+
+        $itemsData               = $this->getItems();
+        $dataArr["line_items"]   = $itemsData[0];
+        $dataArr["total_price"]  = $itemsData[1];
+        $dataArr["total_weight"] = $itemsData[2];
+        $dataArr["item_count"]   = sizeof($itemsData[0]);
+        $dataArr["currency"]     = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+        return $dataArr;
+    }
+
     public function postData($json, $endpoint)
     {
         $apiURL = 'http://' . Mage::getStoreConfig('reachly_handleevent_options/section_one/field_endpoint');

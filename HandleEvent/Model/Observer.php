@@ -49,58 +49,6 @@ class Reachly_HandleEvent_Model_Observer
         return $resp;
     }
 
-    protected function getItems()
-    {
-        $items = array();
-
-        $cart     = Mage::getModel('checkout/cart')->getQuote();
-        $allItems = $cart->getAllItems();
-
-        $totaPrice  = 0;
-        $totaWeight = 0;
-
-        foreach ($allItems as $productItem) {
-            $qty = $productItem->getQty();
-            while ($qty > 0) {
-                $product            = $productItem->getProduct();
-                $item               = array();
-                $itemPrice          = $product->getPrice();
-                $itemWeight         = $product->getWeight();
-                $totaPrice          = $totaPrice + $itemPrice;
-                $item["price"]      = $itemPrice;
-                $item["weight"]     = $itemWeight;
-                $item["product_id"] = $product->getId();
-                $item["title"]      = $product->getName();
-
-                $totaWeight = $totaWeight + $itemWeight;
-
-                array_push($items, $item);
-
-                $qty--;
-            }
-        }
-
-        return array(
-            $items,
-            $totaPrice,
-            $totaWeight
-        );
-    }
-
-    protected function getCartData()
-    {
-        $dataArr = array();
-
-        $itemsData               = $this->getItems();
-        $dataArr["line_items"]   = $itemsData[0];
-        $dataArr["total_price"]  = $itemsData[1];
-        $dataArr["total_weight"] = $itemsData[2];
-        $dataArr["item_count"]   = sizeof($itemsData[0]);
-        $dataArr["currency"]     = Mage::app()->getStore()->getCurrentCurrencyCode();
-
-        return $dataArr;
-    }
-
     public function processCheckoutEvent()
     {
         $helper = Mage::helper('reachly_handleevent');
@@ -121,7 +69,7 @@ class Reachly_HandleEvent_Model_Observer
         $dataArr["cart_token"] = $helper->getCartToken();
         $dataArr["token"]      = $checkoutArr[1];
 
-        $dataArr = array_merge($dataArr, $this->getCartData());
+        $dataArr = array_merge($dataArr, $helper->getCartData());
 
         $whArr["data"] = $dataArr;
 
@@ -147,7 +95,7 @@ class Reachly_HandleEvent_Model_Observer
         $dataArr["checkout_token"] = $helper->getCheckoutToken();
         $dataArr["token"]          = $orderToken;
 
-        $dataArr = array_merge($dataArr, $this->getCartData());
+        $dataArr = array_merge($dataArr, $helper->getCartData());
 
         $whArr["data"] = $dataArr;
 
