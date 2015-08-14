@@ -24,6 +24,7 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
             $dataArr["updated_at"]   = $timeArr[1];
             $dataArr["product_type"] = $product->getTypeId();
             $dataArr["tags"]         = $helper->getProductTags($product);
+            $dataArr["vendor"]       = $product->getAttributeText('manufacturer');
 
             array_push($prodArr, $dataArr);
         }
