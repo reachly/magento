@@ -20,6 +20,15 @@
    </global>
 
    <frontend>
+      <routers>
+         <reachly>
+            <use>standard</use>
+            <args>
+               <module>Reachly_HandleEvent</module>
+               <frontName>reachly</frontName>
+            </args>
+         </reachly>
+      </routers>
       <events>
          <!-- item added to cart -->
          <checkout_cart_add_product_complete>
