@@ -23,14 +23,7 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
             $dataArr["created_at"]   = $timeArr[0];
             $dataArr["updated_at"]   = $timeArr[1];
             $dataArr["product_type"] = $product->getTypeId();
-
-            $tagsModel = Mage::getModel('tag/tag');
-            $tags      = $tagsModel->getResourceCollection()->addPopularity()->addStatusFilter($tagsModel->getApprovedStatus())->addProductFilter($product->getId())->setFlag('relation', true)->addStoreFilter(Mage::app()->getStore()->getId())->setActiveFilter()->load()->getItems();
-
-            foreach ($tags as $tag) {
-                array_push($tagsArr, $tag->getName());
-            }
-            $dataArr["tags"] = $tagsArr;
+            $dataArr["tags"]         = $helper->getProductTags($product);
 
             array_push($prodArr, $dataArr);
         }
