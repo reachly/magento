@@ -81,6 +81,24 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $tagsArr;
     }
 
+    public function getProductCustomOptions($product)
+    {
+        $optionsArr = array();
+
+        $counter = 1;
+
+        $options = Mage::getModel('catalog/product_option')->getProductOptionCollection($product);
+        foreach ($options as $option) {
+            $optArr             = array();
+            $optArr["name"]     = $option->getDefaultTitle();
+            $optArr["position"] = $counter;
+            $counter++;
+            array_push($optionsArr, $optArr);
+        }
+
+        return $optionsArr;
+    }
+
     public function postData($json, $endpoint)
     {
         $apiURL = 'http://' . Mage::getStoreConfig('reachly_handleevent_options/section_one/field_endpoint');
