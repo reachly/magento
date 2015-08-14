@@ -26,6 +26,8 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
             $dataArr["tags"]         = $helper->getProductTags($product);
             $dataArr["vendor"]       = $product->getAttributeText('manufacturer');
             $dataArr["options"]      = $helper->getProductCustomOptions($product);
+            $dataArr["images"]       = $helper->getProductImages($product);
+            //TODO: add variants
 
             array_push($prodArr, $dataArr);
         }
