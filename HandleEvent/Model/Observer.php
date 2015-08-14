@@ -176,11 +176,11 @@ class Reachly_HandleEvent_Model_Observer
             //TODO: get valid ID on create action
             $productID      = Mage::getModel('catalog/product')->getCollection()->getLastItem()->getId() + 1;
         } else {
-            $t              = new DateTime('now', new DateTimeZone(Mage::getStoreConfig('general/locale/timezone')));
-            $offset         = $t->format('P');
-            $mageDate       = Mage::getModel('core/date');
-            $updatedAt      = $mageDate->date("Y-m-d", $updatedAt) . "T" . $mageDate->date("H:i:s", $updatedAt) . $offset;
-            $createdAt      = $mageDate->date("Y-m-d", $createdAt) . "T" . $mageDate->date("H:i:s", $createdAt) . $offset;
+            $timeArr = $helper->getProductTimestamps($product);
+
+            $createdAt = $timeArr[0];
+            $updatedAt = $timeArr[1];
+
             $whArr["topic"] = "products/update";
             $productID      = $product->getId();
         }

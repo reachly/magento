@@ -46,7 +46,26 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getHandle($title)
     {
+        //TODO: handle multiple spaces
         return str_replace(' ', '.', strtolower($title));
+    }
+
+    public function getProductTimestamps($product)
+    {
+        $t        = new DateTime('now', new DateTimeZone(Mage::getStoreConfig('general/locale/timezone')));
+        $offset   = $t->format('P');
+        $mageDate = Mage::getModel('core/date');
+
+        $created = $product->getCreatedAt();
+        $updated = $product->getUpdatedAt();
+
+        $createdAt = $mageDate->date("Y-m-d", $created) . "T" . $mageDate->date("H:i:s", $created) . $offset;
+        $updatedAt = $mageDate->date("Y-m-d", $updated) . "T" . $mageDate->date("H:i:s", $updated) . $offset;
+
+        return array(
+            $createdAt,
+            $updatedAt
+        );
     }
 
     public function postData($json, $endpoint)
