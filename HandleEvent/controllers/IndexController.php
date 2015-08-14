@@ -1,6 +1,7 @@
 <?php
 class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Action
 {
+    //<store URL>/index.php/reachly/index/products
     public function productsAction()
     {
         $helper = Mage::helper('reachly_handleevent');
@@ -31,6 +32,7 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
         echo ($json);
     }
 
+    //<store URL>/index.php/reachly/index/cart
     public function cartAction()
     {
 
