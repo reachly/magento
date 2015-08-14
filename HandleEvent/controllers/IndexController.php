@@ -42,6 +42,15 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
     //<store URL>/index.php/reachly/index/cart
     public function cartAction()
     {
+        $helper = Mage::helper('reachly_handleevent');
 
+        $resultArr = array();
+
+        $resultArr["cart_token"] = $helper->getCartToken();
+        $resultArr               = array_merge($resultArr, $helper->getCartData());
+
+        $json = json_encode($resultArr);
+
+        echo ($json);
     }
 }
