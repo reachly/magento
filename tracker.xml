@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+   <default>
+      <reference name="head">
+         <block type="page/html_header" name="reachly_handleevent_page_head" template="Reachly/tracker.phtml" />
+         <action method="append">
+            <name>reachly_handleevent_page_head</name>
+         </action>
+      </reference>
+   </default>
+</layout>

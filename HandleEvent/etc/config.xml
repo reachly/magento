@@ -20,6 +20,14 @@
    </global>
 
    <frontend>
+      <layout>
+         <updates>
+            <reachly_handleevent>
+               <file>Reachly/tracker.xml</file>
+            </reachly_handleevent>
+         </updates>
+      </layout>
+
       <routers>
          <reachly>
             <use>standard</use>
@@ -29,6 +37,7 @@
             </args>
          </reachly>
       </routers>
+
       <events>
          <!-- item added to cart -->
          <checkout_cart_add_product_complete>
@@ -40,7 +49,6 @@
                </reachly_handleevent>
             </observers>
          </checkout_cart_add_product_complete>
-
          <!-- checkout event -->
          <controller_action_predispatch_checkout_onepage_index>
             <observers>
@@ -51,7 +59,6 @@
                </reachly_handleevent>
             </observers>
          </controller_action_predispatch_checkout_onepage_index>
-
          <!-- order event -->
          <checkout_submit_all_after>
             <observers>
