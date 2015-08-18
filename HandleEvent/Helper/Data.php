@@ -134,12 +134,12 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
             while ($qty > 0) {
                 $product            = $productItem->getProduct();
                 $item               = array();
-                $itemPrice          = $product->getPrice();
-                $itemWeight         = $product->getWeight();
+                $itemPrice          = (float) $product->getPrice();
+                $itemWeight         = (float) $product->getWeight();
                 $totaPrice          = $totaPrice + $itemPrice;
                 $item["price"]      = $itemPrice;
                 $item["weight"]     = $itemWeight;
-                $item["product_id"] = $product->getId();
+                $item["product_id"] = (int) $product->getId();
                 $item["title"]      = $product->getName();
 
                 $totaWeight = $totaWeight + $itemWeight;
