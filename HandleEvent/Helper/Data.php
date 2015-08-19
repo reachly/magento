@@ -35,8 +35,8 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $offset = date_default_timezone_get();
         $dt     = new DateTime();
-        return $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . sprintf("%s%02d:%02d", ($offset >= 0) ? '+' : '-', abs($offset / 3600), abs($offset % 3600) / 60);
-        ;
+        $formattedOffset = sprintf("%s%02d:%02d", ($offset >= 0) ? '+' : '-', abs($offset / 3600), abs($offset % 3600) / 60);
+        return $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $formattedOffset;
     }
 
     public function getStoreAppID()
