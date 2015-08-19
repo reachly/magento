@@ -160,27 +160,6 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $optionsArr;
     }
 
-    public function getProductImages($product)
-    {
-        $imagesArr = array();
-
-        $counter = 1;
-        $productID = $product->getId();
-
-        $images = Mage::getModel('catalog/product')->load($product->getId())->getMediaGalleryImages();
-        foreach ($images as $image) {
-            $imgArr               = array();
-            $imgArr["id"]         = $image->getId();
-            $imgArr["src"]        = $image->getUrl();
-            $imgArr["position"]   = $counter;
-            $imgArr["product_id"] = $productID;
-            $counter++;
-            array_push($imagesArr, $imgArr);
-        }
-
-        return $imagesArr;
-    }
-
     protected function getItems()
     {
         $items = array();
