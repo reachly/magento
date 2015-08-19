@@ -12,7 +12,7 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
         $resultArr = array();
         $prodArr   = array();
 
-        $collection = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect('*');
+        $collection = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect(array('name','manufacturer'));
 
         foreach ($collection as $product) {
             $dataArr = array();
