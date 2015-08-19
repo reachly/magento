@@ -1,6 +1,17 @@
 <?php
 class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    public function cookieIsSet($name)
+    {
+        $cookie = Mage::getSingleton('core/cookie');
+        $value = $cookie->get($name);
+        if ($value == "") {
+          return false;
+        } else {
+          return true;
+        }
+    }
+
     public function getCartToken()
     {
         $cookie = Mage::getSingleton('core/cookie');

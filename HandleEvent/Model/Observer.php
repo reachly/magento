@@ -3,14 +3,15 @@ class Reachly_HandleEvent_Model_Observer
 {
     public function setCartToken()
     {
-        $orderSet = isset($_COOKIE['order']);
+        $helper = Mage::helper('reachly_handleevent');
+
+        $orderSet = $helper->cookieIsSet('order');
         if ($orderSet) {
-            $helper = Mage::helper('reachly_handleevent');
             $helper->deleteCheckoutToken();
             $helper->deleteOrderToken();
         }
 
-        if (!isset($_COOKIE['cart']) || $orderSet) {
+        if (!$helper->cookieIsSet('cart') || $orderSet) {
             $cookie    = Mage::getSingleton('core/cookie');
             $cartToken = substr(md5(rand()), 0, 32);
             $cookie->set('cart', $cartToken, 60 * 60 * 24 * 365 * 2, '/');
@@ -19,7 +20,9 @@ class Reachly_HandleEvent_Model_Observer
 
     protected function setCheckoutToken()
     {
-        if (!isset($_COOKIE['checkout'])) {
+        $helper = Mage::helper('reachly_handleevent');
+
+        if (!$helper->cookieIsSet('checkout')) {
             $cookie        = Mage::getSingleton('core/cookie');
             $checkoutToken = substr(md5(rand()), 0, 32);
             $cookie->set('checkout', $checkoutToken, 60 * 60 * 24 * 365 * 2, '/');
@@ -30,7 +33,7 @@ class Reachly_HandleEvent_Model_Observer
         } else {
             $respArr = array(
                 false,
-                Mage::helper('reachly_handleevent')->getCheckoutToken()
+                $helper->getCheckoutToken()
             );
         }
         return $respArr;
@@ -38,13 +41,15 @@ class Reachly_HandleEvent_Model_Observer
 
     protected function setOrderToken()
     {
-        if (!isset($_COOKIE['order'])) {
+        $helper = Mage::helper('reachly_handleevent');
+
+        if (!$helper->cookieIsSet('order')) {
             $cookie     = Mage::getSingleton('core/cookie');
             $orderToken = substr(md5(rand()), 0, 32);
             $cookie->set('order', $orderToken, 60 * 60 * 24 * 365 * 2, '/');
             $resp = $orderToken;
         } else {
-            $resp = Mage::helper('reachly_handleevent')->getOrderToken();
+            $resp = $helper->getOrderToken();
         }
         return $resp;
     }
