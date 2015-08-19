@@ -44,7 +44,7 @@
             <observers>
                <reachly_handleevent>
                   <class>reachly_handleevent/observer</class>
-                  <method>setCartToken</method>
+                  <method>processCartEvent</method>
                   <type>singleton</type>
                </reachly_handleevent>
             </observers>

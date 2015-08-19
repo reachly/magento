@@ -1,64 +1,17 @@
 <?php
 class Reachly_HandleEvent_Model_Observer
 {
-    public function setCartToken()
+    public function processCartEvent()
     {
-        $helper = Mage::helper('reachly_handleevent');
-
-        $orderSet = $helper->cookieIsSet('order');
-        if ($orderSet) {
-            $helper->deleteCheckoutToken();
-            $helper->deleteOrderToken();
-        }
-
-        if (!$helper->cookieIsSet('cart') || $orderSet) {
-            $cookie    = Mage::getSingleton('core/cookie');
-            $cartToken = substr(md5(rand()), 0, 32);
-            $cookie->set('cart', $cartToken, 60 * 60 * 24 * 365 * 2, '/');
-        }
-    }
-
-    protected function setCheckoutToken()
-    {
-        $helper = Mage::helper('reachly_handleevent');
-
-        if (!$helper->cookieIsSet('checkout')) {
-            $cookie        = Mage::getSingleton('core/cookie');
-            $checkoutToken = substr(md5(rand()), 0, 32);
-            $cookie->set('checkout', $checkoutToken, 60 * 60 * 24 * 365 * 2, '/');
-            $respArr = array(
-                true,
-                $checkoutToken
-            );
-        } else {
-            $respArr = array(
-                false,
-                $helper->getCheckoutToken()
-            );
-        }
-        return $respArr;
-    }
-
-    protected function setOrderToken()
-    {
-        $helper = Mage::helper('reachly_handleevent');
-
-        if (!$helper->cookieIsSet('order')) {
-            $cookie     = Mage::getSingleton('core/cookie');
-            $orderToken = substr(md5(rand()), 0, 32);
-            $cookie->set('order', $orderToken, 60 * 60 * 24 * 365 * 2, '/');
-            $resp = $orderToken;
-        } else {
-            $resp = $helper->getOrderToken();
-        }
-        return $resp;
+      $helper = Mage::helper('reachly_handleevent');
+      $helper->setCartToken();
     }
 
     public function processCheckoutEvent()
     {
         $helper = Mage::helper('reachly_handleevent');
 
-        $checkoutArr = $this->setCheckoutToken();
+        $checkoutArr = $helper->setCheckoutToken();
 
         $whArr   = array();
         $dataArr = array();
@@ -87,7 +40,7 @@ class Reachly_HandleEvent_Model_Observer
     {
         $helper = Mage::helper('reachly_handleevent');
 
-        $orderToken = $this->setOrderToken();
+        $orderToken = $helper->setOrderToken();
 
         $whArr   = array();
         $dataArr = array();
