@@ -176,33 +176,23 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function postData($json, $endpoint)
     {
-        $apiURL = 'http://' . Mage::getStoreConfig('reachly_handleevent_options/section_one/field_endpoint');
+        $apiURL = 'http://' . Mage::getStoreConfig('reachly_handleevent_options/section_one/field_endpoint') . '/' . $endpoint;
 
         $appID     = Mage::getStoreConfig('reachly_handleevent_options/section_one/field_app_id');
         $secretKey = Mage::getStoreConfig('reachly_handleevent_options/section_one/field_secret_key');
 
         $auth = $appID . ":" . base64_encode(hash_hmac('sha256', $json, $secretKey));
 
-        $url = $apiURL . '/' . $endpoint;
-        $ch  = curl_init($url);
-
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-type: application/json',
+        $iClient = new Varien_Http_Client();
+        $iClient->setUri($apiURL)->setMethod('POST')->setConfig(array(
+            'maxredirects' => 0,
+            'timeout' => 5
+        ));
+        $iClient->setHeaders(array(
             'Content-Length: ' . strlen($json),
             'Authorization: ' . $auth
         ));
-
-        curl_exec($ch);
-        curl_close($ch);
+        $iClient->setRawData($json, "application/json;charset=UTF-8");
+        $response = $iClient->request();
     }
 }
