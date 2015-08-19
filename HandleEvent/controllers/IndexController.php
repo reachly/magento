@@ -13,7 +13,6 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
 
         foreach ($collection as $product) {
             $dataArr = array();
-            $tagsArr = array();
 
             $dataArr["id"]           = $product->getId();
             $productName             = $product->getName();
