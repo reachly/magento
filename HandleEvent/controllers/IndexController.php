@@ -36,7 +36,7 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
 
         $json = json_encode($resultArr);
 
-        echo ($json);
+        $this->getResponse()->clearHeaders()->setHeader('Content-Type', 'application/json')->setBody($json);
     }
 
     //<store URL>/index.php/reachly/index/cart
@@ -51,6 +51,6 @@ class Reachly_HandleEvent_IndexController extends Mage_Core_Controller_Front_Act
 
         $json = json_encode($resultArr);
 
-        echo ($json);
+        $this->getResponse()->clearHeaders()->setHeader('Content-Type', 'application/json')->setBody($json);
     }
 }
