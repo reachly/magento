@@ -194,16 +194,17 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
 
         $auth = $appID . ":" . base64_encode(hash_hmac('sha256', $json, $secretKey));
 
-        $iClient = new Varien_Http_Client();
-        $iClient->setUri($apiURL)->setMethod('POST')->setConfig(array(
+        $client = new Varien_Http_Client();
+        $client->setUri($apiURL)->setMethod('POST')->setConfig(array(
             'maxredirects' => 0,
             'timeout' => 5
         ));
-        $iClient->setHeaders(array(
+
+        $client->setHeaders(array(
             'Content-Length: ' . strlen($json),
             'Authorization: ' . $auth
         ));
-        $iClient->setRawData($json, "application/json;charset=UTF-8");
-        $response = $iClient->request();
+        $client->setRawData($json, "application/json;charset=UTF-8");
+        $response = $client->request();
     }
 }
