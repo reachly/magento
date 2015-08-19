@@ -1,17 +1,19 @@
 <?php
 class Reachly_HandleEvent_Model_Observer
 {
+    function __construct()
+    {
+        $this->helper = Mage::helper('reachly_handleevent');
+    }
+
     public function processCartEvent()
     {
-      $helper = Mage::helper('reachly_handleevent');
-      $helper->setCartToken();
+        $this->helper->setCartToken();
     }
 
     public function processCheckoutEvent()
     {
-        $helper = Mage::helper('reachly_handleevent');
-
-        $checkoutArr = $helper->setCheckoutToken();
+        $checkoutArr = $this->helper->setCheckoutToken();
 
         $whArr   = array();
         $dataArr = array();
@@ -21,56 +23,53 @@ class Reachly_HandleEvent_Model_Observer
         } else {
             $whArr["topic"] = "checkouts/update";
         }
-        $whArr["updated_at"] = $helper->getTimestamp();
-        $whArr["app_id"]     = $helper->getStoreAppID();
+        $whArr["updated_at"] = $this->helper->getTimestamp();
+        $whArr["app_id"]     = $this->helper->getStoreAppID();
 
-        $dataArr["cart_token"] = $helper->getCartToken();
+        $dataArr["cart_token"] = $this->helper->getCartToken();
         $dataArr["token"]      = $checkoutArr[1];
 
-        $dataArr = array_merge($dataArr, $helper->getCartData());
+        $dataArr = array_merge($dataArr, $this->helper->getCartData());
 
         $whArr["data"] = $dataArr;
 
         $json = json_encode($whArr);
 
-        $helper->postData($json, 'checkout');
+        $this->helper->postData($json, 'checkout');
     }
 
     public function processOrderEvent()
     {
-        $helper = Mage::helper('reachly_handleevent');
-
-        $orderToken = $helper->setOrderToken();
+        $orderToken = $this->helper->setOrderToken();
 
         $whArr   = array();
         $dataArr = array();
 
         $whArr["topic"]      = "orders/create";
-        $whArr["updated_at"] = $helper->getTimestamp();
-        $whArr["app_id"]     = $helper->getStoreAppID();
+        $whArr["updated_at"] = $this->helper->getTimestamp();
+        $whArr["app_id"]     = $this->helper->getStoreAppID();
 
-        $dataArr["cart_token"]     = $helper->getCartToken();
-        $dataArr["checkout_token"] = $helper->getCheckoutToken();
+        $dataArr["cart_token"]     = $this->helper->getCartToken();
+        $dataArr["checkout_token"] = $this->helper->getCheckoutToken();
         $dataArr["token"]          = $orderToken;
 
-        $dataArr = array_merge($dataArr, $helper->getCartData());
+        $dataArr = array_merge($dataArr, $this->helper->getCartData());
 
         $whArr["data"] = $dataArr;
 
         $json = json_encode($whArr);
 
-        $helper->postData($json, 'order');
+        $this->helper->postData($json, 'order');
     }
 
     public function productSaveEvent($observer)
     {
-        $helper  = Mage::helper('reachly_handleevent');
         $product = $observer->getEvent()->getProduct();
 
         $whArr   = array();
         $dataArr = array();
 
-        $currentTime = $helper->getTimestamp();
+        $currentTime = $this->helper->getTimestamp();
 
         $createdAt = $product->getCreatedAt();
         $updatedAt = $product->getUpdatedAt();
@@ -82,7 +81,7 @@ class Reachly_HandleEvent_Model_Observer
             //TODO: get valid ID on create action
             $productID      = Mage::getModel('catalog/product')->getCollection()->getLastItem()->getId() + 1;
         } else {
-            $timeArr = $helper->getProductTimestamps($product);
+            $timeArr = $this->helper->getProductTimestamps($product);
 
             $createdAt = $timeArr[0];
             $updatedAt = $timeArr[1];
@@ -91,12 +90,12 @@ class Reachly_HandleEvent_Model_Observer
             $productID      = $product->getId();
         }
         $whArr["updated_at"] = $currentTime;
-        $whArr["app_id"]     = $helper->getStoreAppID();
+        $whArr["app_id"]     = $this->helper->getStoreAppID();
 
         $dataArr["id"]         = $productID;
         $productName           = $product->getName();
         $dataArr["title"]      = $productName;
-        $dataArr["handle"]     = $helper->getHandle($productName);
+        $dataArr["handle"]     = $this->helper->getHandle($productName);
         $dataArr["created_at"] = $createdAt;
         $dataArr["updated_at"] = $updatedAt;
 
@@ -106,7 +105,7 @@ class Reachly_HandleEvent_Model_Observer
 
         $json = json_encode($whArr);
 
-        $helper->postData($json, 'product');
+        $this->helper->postData($json, 'product');
     }
 
     public function productDeleteEvent($observer)
