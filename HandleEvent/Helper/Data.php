@@ -165,6 +165,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         $imagesArr = array();
 
         $counter = 1;
+        $productID = $product->getId();
 
         $images = Mage::getModel('catalog/product')->load($product->getId())->getMediaGalleryImages();
         foreach ($images as $image) {
@@ -172,7 +173,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
             $imgArr["id"]         = $image->getId();
             $imgArr["src"]        = $image->getUrl();
             $imgArr["position"]   = $counter;
-            $imgArr["product_id"] = $product->getId();
+            $imgArr["product_id"] = $productID;
             $counter++;
             array_push($imagesArr, $imgArr);
         }
