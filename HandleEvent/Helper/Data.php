@@ -73,7 +73,10 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         $tagsArr = array();
 
         $tagsModel = Mage::getModel('tag/tag');
-        $tags      = $tagsModel->getResourceCollection()->addPopularity()->addStatusFilter($tagsModel->getApprovedStatus())->addProductFilter($product->getId())->setFlag('relation', true)->addStoreFilter(Mage::app()->getStore()->getId())->setActiveFilter()->load()->getItems();
+        $tags      = $tagsModel->getResourceCollection()->addPopularity()->addStatusFilter($tagsModel->getApprovedStatus())
+                  ->addProductFilter($product->getId())->setFlag('relation', true)->addStoreFilter(
+                  Mage::app()->getStore()->getId()
+        )->setActiveFilter()->load()->getItems();
         foreach ($tags as $tag) {
             array_push($tagsArr, $tag->getName());
         }
