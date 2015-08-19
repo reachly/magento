@@ -1,6 +1,7 @@
 <?php
 class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    //cookieIsSet returns boolean representing whether cookie is set or not
     public function cookieIsSet($name)
     {
         $cookie = Mage::getSingleton('core/cookie');
@@ -12,6 +13,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    //setCartToken generates and sets new cart token if none exists or order token is present
     public function setCartToken()
     {
         $orderSet = $this->cookieIsSet('order');
@@ -27,6 +29,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    //setCheckoutToken generates and sets new checkout token if none exists and returns existing one otherwise
     public function setCheckoutToken()
     {
         if (!$this->cookieIsSet('checkout')) {
@@ -46,6 +49,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $respArr;
     }
 
+    //setOrderToken generates and sets new order token if none exists and returns existing one otherwise
     public function setOrderToken()
     {
         if (!$this->cookieIsSet('order')) {
@@ -59,36 +63,42 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $resp;
     }
 
+    //getCartToken returns existing cart token
     public function getCartToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
         return $cookie->get('cart');
     }
 
+    //getCheckoutToken returns existing checkout token
     public function getCheckoutToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
         return $cookie->get('checkout');
     }
 
+    //getOrderToken returns existing order token
     public function getOrderToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
         return $cookie->get('order');
     }
 
+    //deleteCheckoutToken deletes checkout token cookie
     public function deleteCheckoutToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
         $cookie->set('checkout', '', -300, '/');
     }
 
+    //deleteOrderToken deletes order token cookie
     public function deleteOrderToken()
     {
         $cookie = Mage::getSingleton('core/cookie');
         $cookie->set('order', '', -300, '/');
     }
 
+    //getTimestamp returns current time in ISO-8601 format
     public function getTimestamp()
     {
         $offset = date_default_timezone_get();
@@ -97,17 +107,20 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $formattedOffset;
     }
 
+    //getStoreAppID returns store's host in format 'magento.store-hostname'
     public function getStoreAppID()
     {
         return "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
     }
 
+    //getHandle generates handle string from product title
     public function getHandle($title)
     {
         //TODO: handle multiple spaces
         return str_replace(' ', '.', strtolower($title));
     }
 
+    //getProductTimestamps returns product's creation and modification time in ISO-8601 format
     public function getProductTimestamps($product)
     {
         $t        = new DateTime('now', new DateTimeZone(Mage::getStoreConfig('general/locale/timezone')));
@@ -126,6 +139,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
+    //getProductTags returns an array of tags for product specified
     public function getProductTags($product)
     {
         $tagsArr = array();
@@ -142,6 +156,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $tagsArr;
     }
 
+    //getProductCustomOptions returns product's custom options
     public function getProductCustomOptions($product)
     {
         $optionsArr = array();
@@ -160,6 +175,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $optionsArr;
     }
 
+    //getItems returns list of cart items
     protected function getItems()
     {
         $items = array();
@@ -198,6 +214,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
+    //getCartData returns cart data
     public function getCartData()
     {
         $dataArr = array();
@@ -212,6 +229,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $dataArr;
     }
 
+    //postData posts json data to specified endpoint address
     public function postData($json, $endpoint)
     {
         $apiURL = 'http://' . Mage::getStoreConfig('reachly_handleevent_options/section_one/field_endpoint') . '/' . $endpoint;

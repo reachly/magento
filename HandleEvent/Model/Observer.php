@@ -6,11 +6,13 @@ class Reachly_HandleEvent_Model_Observer
         $this->helper = Mage::helper('reachly_handleevent');
     }
 
+    //processCartEvent is being triggered when customer's cart is updated
     public function processCartEvent()
     {
         $this->helper->setCartToken();
     }
 
+    //processCheckoutEvent is being triggered on checkout event
     public function processCheckoutEvent()
     {
         $checkoutArr = $this->helper->setCheckoutToken();
@@ -38,6 +40,7 @@ class Reachly_HandleEvent_Model_Observer
         $this->helper->postData($json, 'checkout');
     }
 
+    //processCheckoutEvent is being triggered on order event
     public function processOrderEvent()
     {
         $orderToken = $this->helper->setOrderToken();
@@ -62,6 +65,7 @@ class Reachly_HandleEvent_Model_Observer
         $this->helper->postData($json, 'order');
     }
 
+    //processCheckoutEvent is being triggered on product save event
     public function productSaveEvent($observer)
     {
         $product = $observer->getEvent()->getProduct();
@@ -108,6 +112,7 @@ class Reachly_HandleEvent_Model_Observer
         $this->helper->postData($json, 'product');
     }
 
+    //processCheckoutEvent is being triggered on product delete event
     public function productDeleteEvent($observer)
     {
         //TODO: send products/delete
