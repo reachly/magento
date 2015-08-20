@@ -1,11 +1,15 @@
 <?php
 class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    function __construct()
+    {
+        $this->cookie = Mage::getSingleton('core/cookie');
+    }
+
     //cookieIsSet returns boolean representing whether cookie is set or not
     public function cookieIsSet($name)
     {
-        $cookie = Mage::getSingleton('core/cookie');
-        $value = $cookie->get($name);
+        $value = $this->cookie->get($name);
         if ($value == "") {
           return false;
         } else {
@@ -23,9 +27,8 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         if (!$this->cookieIsSet('cart') || $orderSet) {
-            $cookie    = Mage::getSingleton('core/cookie');
             $cartToken = substr(md5(rand()), 0, 32);
-            $cookie->set('cart', $cartToken, 60 * 60 * 24 * 365 * 2, '/');
+            $this->cookie->set('cart', $cartToken, 60 * 60 * 24 * 365 * 2, '/');
         }
     }
 
@@ -33,9 +36,8 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
     public function setCheckoutToken()
     {
         if (!$this->cookieIsSet('checkout')) {
-            $cookie        = Mage::getSingleton('core/cookie');
             $checkoutToken = substr(md5(rand()), 0, 32);
-            $cookie->set('checkout', $checkoutToken, 60 * 60 * 24 * 365 * 2, '/');
+            $this->cookie->set('checkout', $checkoutToken, 60 * 60 * 24 * 365 * 2, '/');
             $respArr = array(
                 true,
                 $checkoutToken
@@ -53,9 +55,8 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
     public function setOrderToken()
     {
         if (!$this->cookieIsSet('order')) {
-            $cookie     = Mage::getSingleton('core/cookie');
             $orderToken = substr(md5(rand()), 0, 32);
-            $cookie->set('order', $orderToken, 60 * 60 * 24 * 365 * 2, '/');
+            $this->cookie->set('order', $orderToken, 60 * 60 * 24 * 365 * 2, '/');
             $resp = $orderToken;
         } else {
             $resp = $this->getOrderToken();
@@ -66,36 +67,31 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
     //getCartToken returns existing cart token
     public function getCartToken()
     {
-        $cookie = Mage::getSingleton('core/cookie');
-        return $cookie->get('cart');
+        return $this->cookie->get('cart');
     }
 
     //getCheckoutToken returns existing checkout token
     public function getCheckoutToken()
     {
-        $cookie = Mage::getSingleton('core/cookie');
-        return $cookie->get('checkout');
+        return $this->cookie->get('checkout');
     }
 
     //getOrderToken returns existing order token
     public function getOrderToken()
     {
-        $cookie = Mage::getSingleton('core/cookie');
-        return $cookie->get('order');
+        return $this->cookie->get('order');
     }
 
     //deleteCheckoutToken deletes checkout token cookie
     public function deleteCheckoutToken()
     {
-        $cookie = Mage::getSingleton('core/cookie');
-        $cookie->set('checkout', '', -300, '/');
+        $this->cookie->set('checkout', '', -300, '/');
     }
 
     //deleteOrderToken deletes order token cookie
     public function deleteOrderToken()
     {
-        $cookie = Mage::getSingleton('core/cookie');
-        $cookie->set('order', '', -300, '/');
+        $this->cookie->set('order', '', -300, '/');
     }
 
     //getTimestamp returns current time in ISO-8601 format
