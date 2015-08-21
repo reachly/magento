@@ -246,6 +246,11 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
             'Authorization: ' . $auth
         ));
         $client->setRawData($json, "application/json;charset=UTF-8");
-        $response = $client->request();
+
+        try {
+          $response = $client->request();
+        } catch(Exception $e) {
+          //TODO: try to send later
+        }
     }
 }
