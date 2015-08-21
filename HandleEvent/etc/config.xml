@@ -95,7 +95,7 @@
          </catalog_product_prepare_save>
 
          <!-- product deleted -->
-         <catalog_controller_product_delete>
+         <catalog_product_delete_after>
             <observers>
                <reachly_handleevent>
                   <class>reachly_handleevent/observer</class>
@@ -103,7 +103,7 @@
                   <type>singleton</type>
                </reachly_handleevent>
             </observers>
-         </catalog_controller_product_delete>
+         </catalog_product_delete_after>
       </events>
 
       <acl>

@@ -134,6 +134,5 @@ class Reachly_HandleEvent_Model_Observer
         $this->helper->postData($json, 'product');
 
         //TODO: handle multiple items
-        //TODO: trigger from product edit view (owerwrite Mage class)
     }
 }
