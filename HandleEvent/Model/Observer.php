@@ -112,9 +112,28 @@ class Reachly_HandleEvent_Model_Observer
         $this->helper->postData($json, 'product');
     }
 
-    //processCheckoutEvent is being triggered on product delete event
+    //productDeleteEvent is being triggered on product delete event
     public function productDeleteEvent($observer)
     {
-        //TODO: send products/delete
+        $product = $observer->getEvent()->getProduct();
+
+        $whArr   = array();
+        $dataArr = array();
+
+        $whArr["topic"]      = "products/delete";
+        $whArr["updated_at"] = $this->helper->getTimestamp();
+        $whArr["app_id"]     = $this->helper->getStoreAppID();
+
+        $dataArr["id"]    = $product->getId();
+        $dataArr["title"] = $product->getName();
+
+        $whArr["data"] = $dataArr;
+
+        $json = json_encode($whArr);
+
+        $this->helper->postData($json, 'product');
+
+        //TODO: handle multiple items
+        //TODO: trigger from product edit view (owerwrite Mage class)
     }
 }
