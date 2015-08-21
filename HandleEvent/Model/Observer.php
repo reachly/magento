@@ -132,7 +132,5 @@ class Reachly_HandleEvent_Model_Observer
         $json = json_encode($whArr);
 
         $this->helper->postData($json, 'product');
-
-        //TODO: handle multiple items
     }
 }
