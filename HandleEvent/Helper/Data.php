@@ -242,13 +242,11 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
             'timeout' => 15
         ));
 
-
         $client->setHeaders(array(
             'Content-Length: ' . strlen($json),
             'Authorization: ' . $auth
         ));
         $client->setRawData($json, "application/json;charset=UTF-8");
-
 
         $reqCounter = 0;
         do {
