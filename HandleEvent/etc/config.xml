@@ -31,7 +31,7 @@
 
    <default>
       <settings>
-         <endpoint_url>http://127.0.0.1:8042</endpoint_url>
+         <endpoint_url>https://bh.reach.ly</endpoint_url>
       </settings>
    </default>
 

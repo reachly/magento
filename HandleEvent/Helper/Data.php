@@ -236,10 +236,12 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         $auth = $appID . ":" . base64_encode(hash_hmac('sha256', $json, $secretKey));
 
         $client = new Varien_Http_Client();
+
         $client->setUri($apiURL)->setMethod('POST')->setConfig(array(
             'maxredirects' => 0,
-            'timeout' => 5
+            'timeout' => 15
         ));
+
 
         $client->setHeaders(array(
             'Content-Length: ' . strlen($json),
@@ -247,10 +249,17 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         ));
         $client->setRawData($json, "application/json;charset=UTF-8");
 
-        try {
-          $response = $client->request();
-        } catch(Exception $e) {
-          //TODO: try to send later
-        }
+
+        $reqCounter = 0;
+        do {
+            $success = true;
+            try {
+                $response = $client->request();
+            }
+            catch (Zend_Http_Client_Exception $e) {
+                $success = false;
+                $reqCounter++;
+            }
+        } while (!$success && $reqCounter < 3);
     }
 }
