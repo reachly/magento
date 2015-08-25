@@ -2,7 +2,7 @@
 <config>
    <modules>
       <Reachly_HandleEvent>
-         <version>0.0.3</version>
+         <version>0.0.4</version>
       </Reachly_HandleEvent>
    </modules>
 
