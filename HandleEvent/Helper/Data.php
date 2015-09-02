@@ -106,7 +106,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
     //getStoreAppID returns store's host in format 'magento.store-hostname'
     public function getStoreAppID()
     {
-        return "magento." . parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
+        return parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
     }
 
     //getHandle generates handle string from product title
