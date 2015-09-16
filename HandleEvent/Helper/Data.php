@@ -103,7 +103,7 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
         return $dt->format('Y-m-d') . 'T' . $dt->format('H:i:s') . $formattedOffset;
     }
 
-    //getStoreAppID returns store's host in format 'magento.store-hostname'
+    //getStoreAppID returns store's host
     public function getStoreAppID()
     {
         return parse_url(Mage::getBaseUrl(), PHP_URL_HOST);
