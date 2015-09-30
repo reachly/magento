@@ -67,7 +67,11 @@ class Reachly_HandleEvent_Helper_Data extends Mage_Core_Helper_Abstract
     //getCartToken returns existing cart token
     public function getCartToken()
     {
-        return $this->cookie->get('cart');
+        $cartToken = null;
+        if ($this->cookieIsSet('cart')) {
+          $cartToken = $this->cookie->get('cart');
+        }
+        return $cartToken;
     }
 
     //getCheckoutToken returns existing checkout token
